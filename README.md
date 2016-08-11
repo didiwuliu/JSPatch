@@ -1,11 +1,15 @@
 # JSPatch
-[![Travis](https://img.shields.io/travis/bang590/JSPatch.svg)](https://github.com/bang590/JSPatch)
+[![Travis](https://img.shields.io/travis/bang590/JSPatch.svg)](https://travis-ci.org/bang590/JSPatch)
 ![CocoaPods Version](https://img.shields.io/cocoapods/v/JSPatch.svg?style=flat)
 [![License](https://img.shields.io/github/license/bang590/JSPatch.svg?style=flat)](https://github.com/bang590/JSPatch/blob/master/LICENSE)
+
+[中文介绍](https://github.com/bang590/JSPatch/blob/master/README-CN.md) | [文档](https://github.com/bang590/JSPatch/wiki) | [JSPatch平台](http://jspatch.com)
 
 JSPatch bridges Objective-C and JavaScript using the Objective-C runtime. You can call any Objective-C class and method in JavaScript by just including a small engine. That makes the APP obtaining the power of script language: add modules or replacing Objective-C code to fix bugs dynamically.
 
 JSPatch is still in development, welcome to improve the project together.
+
+**Notice**: Please go to [Wiki](https://github.com/bang590/JSPatch/wiki/) to get full document.
 
 ## Example
 
@@ -51,6 +55,7 @@ defineClass('AppDelegate', {
 });
 ```
 
+You can also try to use [JSPatch Convertor](https://github.com/bang590/JSPatchConvertor) to convertor code from Objective-C to JavaScript automatically.
 
 ## Installation
 
@@ -60,7 +65,7 @@ defineClass('AppDelegate', {
 
 ```ruby
 # Your Podfile
-platform :ios, '7.0'
+platform :ios, '6.0'
 pod 'JSPatch'
 ```
 
@@ -137,7 +142,7 @@ console.log(jsArr.push("Patch").join(''))  //output: JSPatch
 
 // use hashes to represent struct like CGRect / CGSize / CGPoint / NSRange
 var view = UIView.alloc().initWithFrame({x:20, y:20, width:100, height:100});
-var x = view.bounds.x;
+var x = view.bounds().x;
 
 // wrap function with `block()` when passing block from JS to OC
 // OC Method: + (void)request:(void(^)(NSString *content, BOOL success))callback
@@ -146,9 +151,9 @@ require('JPObject').request(block("NSString *, BOOL", function(ctn, succ) {
 }));
 
 // GCD
-dispatch_after(function(1.0, function(){
+dispatch_after(1.0, function(){
   // do something
-}))
+})
 dispatch_async_main(function(){
   // do something
 })
@@ -217,7 +222,7 @@ There are some extensions provide support for custom struct type, C methods and 
     [JPEngine startEngine];
 
     //add extensions after startEngine
-    [JPEngine addExtensions:@[[JPInclude instance], [JPCGTransform instance]]];
+    [JPEngine addExtensions:@[@"JPInclude", @"JPCGTransform"]];
 
     NSString *sourcePath = [[NSBundle mainBundle] pathForResource:@"demo" ofType:@"js"];
     NSString *script = [NSString stringWithContentsOfFile:sourcePath encoding:NSUTF8StringEncoding error:nil];
@@ -238,10 +243,7 @@ view.setTransform({a:1, b:0, c:0, d:1, tx:0, ty:100})
 Extensions can be added dynamiclly in JS, which is recommended:
 
 ```js
-require('JPEngine').addExtensions([
-  require('JPInclude').instance(), 
-  require('JPCGTransform').instance(),
-])
+require('JPEngine').addExtensions(['JPInclude', 'JPCGTransform'])
 
 // `include()` and `CGAffineTransform` is avaliable now.
 ```
@@ -250,6 +252,6 @@ You can create your own extension to support custom struct type and C methods in
 
 
 ## Enviroment
-- iOS 7+
+- iOS 7+, forward compatibility with iOS 6
 - JavaScriptCore.framework
 - Support armv7/armv7s/arm64

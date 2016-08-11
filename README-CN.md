@@ -4,6 +4,8 @@ JSPatch 可以让你用 JavaScript 书写原生 iOS APP。只需在项目引入�
 
 项目仍在开发中，欢迎一起完善这个项目。
 
+**注意**：完善的文档请移步 [Wiki](https://github.com/bang590/JSPatch/wiki/)。
+
 ## 示例
 
 ```objc
@@ -48,6 +50,7 @@ defineClass('AppDelegate', {
 });
 ```
 
+可以使用 [JSPatch Convertor](https://github.com/bang590/JSPatchConvertor) 自动把 Objective-C 代码转为 JavaScript 代码。
 
 ## 安装
 
@@ -121,7 +124,7 @@ console.log(jsArr.push("Patch").join(''))  //output: JSPatch
 
 // 在JS用字典的方式表示 CGRect / CGSize / CGPoint / NSRange
 var view = UIView.alloc().initWithFrame({x:20, y:20, width:100, height:100});
-var x = view.bounds.x;
+var x = view.bounds().x;
 
 // block 从 JavaScript 传入 Objective-C 时，需要写上每个参数的类型。
 // OC Method: + (void)request:(void(^)(NSString *content, BOOL success))callback
@@ -202,7 +205,7 @@ defineClass("JPTableViewController", {
     [JPEngine startEngine];
 
     //添加扩展
-    [JPEngine addExtensions:@[[JPInclude instance], [JPCGTransform instance]]];
+    [JPEngine addExtensions:@[@"JPInclude", @"JPCGTransform"]];
 
     NSString *sourcePath = [[NSBundle mainBundle] pathForResource:@"demo" ofType:@"js"];
     NSString *script = [NSString stringWithContentsOfFile:sourcePath encoding:NSUTF8StringEncoding error:nil];
@@ -221,10 +224,7 @@ view.setTransform({a:1, b:0, c:0, d:1, tx:0, ty:100})
 扩展可以在JS动态加载，更推荐这种加载方式，在需要用到时才加载：
 
 ```js
-require('JPEngine').addExtensions([
-  require('JPInclude').instance(), 
-  require('JPCGTransform').instance(),
-])
+require('JPEngine').addExtensions(['JPInclude', 'JPCGTransform'])
 
 // `include()` and `CGAffineTransform` is avaliable now.
 ```
